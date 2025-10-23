@@ -1,12 +1,15 @@
 package com.example;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
@@ -22,8 +25,17 @@ public class LoginTest {
     JavascriptExecutor js = (JavascriptExecutor) driver;
 
     @BeforeMethod
-    public void setUp() {
-        driver = new ChromeDriver();
+    public void setUp() throws MalformedURLException {
+        // driver = new ChromeDriver();
+
+        // remore execution
+
+        ChromeOptions options = new ChromeOptions();
+        options.setCapability("platformName", "Windows 10");
+        options.setCapability("browserName", "chrome");
+        options.setCapability("version", "latest");
+
+        driver = new RemoteWebDriver(new URL("http://localhost:4444"), options);
         js = (JavascriptExecutor) driver;
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -41,7 +53,7 @@ public class LoginTest {
 
         type("#srcDest", "Chennai");
 
-        driver.quit();
+        System.out.println("Test Completed Successfully");
 
     }
 
@@ -55,7 +67,7 @@ public class LoginTest {
 
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(locator)))
                 .sendKeys(text);
-                 try {
+        try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
 
